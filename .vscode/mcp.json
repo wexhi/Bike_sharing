@@ -1,0 +1,14 @@
+{
+    "servers": {
+        "test": {
+            "type": "stdio",
+            "command": "uv",
+            "args": [
+                "--directory",
+                "C:\\Users\\wexhi\\Desktop\\study\\Numerical_analyze\\Presentation_2\\Bike_sharing",
+                "run",
+                "weather.py"
+            ]
+        }
+    }
+}
