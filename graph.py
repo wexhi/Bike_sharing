@@ -2,7 +2,8 @@ from typing import Literal
 from typing_extensions import TypedDict
 from typing import Dict, List, Literal, cast
 from langgraph.graph import StateGraph, END, START
-from tools import TOOLS
+# from tools import TOOLS
+from bike_sharing_tools import TOOLS
 from state import State, InputState
 from configuration import Configuration
 from langchain_core.runnables import RunnableConfig
@@ -96,17 +97,14 @@ graph = builder.compile(
 )
 graph.name = "Linear Solver Agent"  # This customizes the name in LangSmith
 
-async def main():
-   async for chunk in graph.astream(
-        {"messages": [("Solve the following system of linear equations using the Jacobi iterative method: \n"
-                            "8x - 3y + 2z = 20\n"
-                            "4x + 11y - z = 33\n"
-                            "6x + 3y + 12z = 36\n"
-                            "with an error tolerance of 1e-3 and a maximum iteration limit of 100.")]}
-    ):
-        print(chunk)
+# async def main():
+#    async for chunk in graph.astream(
+#         {"messages": [("I want to check the station '9th & G St NW' information in 24 hours")]}
+#     ):
+#         print(chunk)
 
-# example with a single tool call
-if __name__ == "__main__":
-    import os
-    asyncio.run(main())
+# # example with a single tool call
+# if __name__ == "__main__":
+#     import nest_asyncio
+#     nest_asyncio.apply()  # 允许在已有事件循环中运行 asyncio.run
+#     asyncio.run(main())
