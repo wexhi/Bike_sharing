@@ -72,22 +72,22 @@ def route_model_output(state: State) -> Literal["__end__", "tools"]:
 
 # Define a new graph
 builder = StateGraph(State, input=InputState, config_schema=Configuration)
-builder.add_node(call_model)
+builder.add_node("Agent", call_model)
 builder.add_node("tools", ToolNode(TOOLS))
 
-# Set the entrypoint as `call_model`
-builder.add_edge(START, "call_model")
-# Add a conditional edge to determine the next step after 'call_model'
+# Set the entrypoint as `Agent`
+builder.add_edge(START, "Agent")
+# Add a conditional edge to determine the next step after 'Agent'
 builder.add_conditional_edges(
-    "call_model",
-    # After call_model finishes running, the next node(s) are scheduled
+    "Agent",
+    # After Agent finishes running, the next node(s) are scheduled
     # base on the output from the route_model_output
     route_model_output,
 )
 
 # Add a normal edge from 'tools' to 'call_model'
 # This creates a cycle: after using tools, we always return to the model
-builder.add_edge("tools", "call_model")
+builder.add_edge("tools", "Agent")
 
 # Compile the builder into an executable graph
 # You can customize this by adding interrupt points for state updates
@@ -97,14 +97,14 @@ graph = builder.compile(
 )
 graph.name = "Linear Solver Agent"  # This customizes the name in LangSmith
 
-# async def main():
-#    async for chunk in graph.astream(
-#         {"messages": [("I want to check the station '9th & G St NW' information in 24 hours")]}
-#     ):
-#         print(chunk)
+async def main():
+   async for chunk in graph.astream(
+        {"messages": [("I want to check the station '9th & G St NW' information in 24 hours")]}
+    ):
+        print(chunk)
 
 # # example with a single tool call
-# if __name__ == "__main__":
-#     import nest_asyncio
-#     nest_asyncio.apply()  # 允许在已有事件循环中运行 asyncio.run
-#     asyncio.run(main())
+if __name__ == "__main__":
+    import nest_asyncio
+    nest_asyncio.apply()  # 允许在已有事件循环中运行 asyncio.run
+    asyncio.run(main())
